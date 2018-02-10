@@ -1,0 +1,17 @@
+
+.ChatMessage {
+    padding: 0.2em 0;
+    vertical-align: middle;
+}
+
+.time {
+    color: #777;
+    display: inline-block;
+    width: 3.1415926535897932384626433832795028841971693993751058209749445923em;
+    font-size: 0.8em;
+    vertical-align: baseline;
+}
+
+.username {
+    font-weight: bold;
+}
