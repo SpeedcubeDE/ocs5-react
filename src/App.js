@@ -5,11 +5,14 @@ import Chat from "./components/Chat";
 import Connection from "./business/Connection";
 import ChatInput from "./components/ChatInput";
 import OCS from "./business/OCS"
+import Cookie from 'js-cookie'
 
 class App extends Component {
     constructor() {
         super();
-        this.connection = new Connection("wss://localhost:34543/websocket");
+        // TODO display what server you're connected to somewhere
+        const serverHost = Cookie.get("serverHost") || window.location.hostname;
+        this.connection = new Connection("wss://" + serverHost + ":34543/websocket");
         this.connection.listen("login", data => {
             if (data["login"]) {
                 console.log("Login successful!");
@@ -20,9 +23,9 @@ class App extends Component {
         setInterval(function () {
             this.connection.send("heartbeat", {});
         }.bind(this), 60000);
-        this.connection.listen("open", event => {
-            // TODO read login-token from cookie or something
-            this.connection.send("login", {key: "2018"});
+        this.connection.listen("open", () => {
+            const loginToken = Cookie.get("token") || "2018"; // TODO remove debug token
+            this.connection.send("login", {key: loginToken});
         });
         this.ocs = new OCS(this.connection);
         window.ocs = this.ocs; // expose for in-browser debugging
