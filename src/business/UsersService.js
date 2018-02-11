@@ -79,7 +79,7 @@ class UsersService {
         const rule = `.username.user-${user.id} { color: #${user.nameColor}; }`;
         const ruleindex = this.stylesheet_ruleindices.get(user.id);
         if (ruleindex === undefined) {
-            const new_ruleindex = this.stylesheet.insertRule(rule);
+            const new_ruleindex = this.stylesheet.insertRule(rule, this.stylesheet.cssRules.length);
             this.stylesheet_ruleindices.set(user.id, new_ruleindex);
         } else {
             this.stylesheet.deleteRule(ruleindex);
