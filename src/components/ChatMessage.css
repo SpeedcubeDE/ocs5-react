@@ -15,3 +15,7 @@
 .username {
     font-weight: bold;
 }
+
+.system-message {
+    color: #ff8c00;
+}

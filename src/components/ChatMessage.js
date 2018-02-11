@@ -3,6 +3,8 @@ import "./ChatMessage.css"
 import PropTypes from "prop-types";
 
 class ChatMessage extends Component {
+    static SYSTEM_USER_ID = -1;
+
     constructor(props, context) {
         super(props, context);
         this.userID = props.message.userID;
@@ -25,11 +27,15 @@ class ChatMessage extends Component {
     }
 
     componentDidMount() {
-        this.context.ocs.usersService.listenOnUserupdate(this.userID, this.handleUserdataUpdate);
+        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
+            this.context.ocs.usersService.listenOnUserupdate(this.userID, this.handleUserdataUpdate);
+        }
     }
 
     componentWillUnmount() {
-        this.context.ocs.usersService.unlistenOnUserupdate(this.userID, this.handleUserdataUpdate);
+        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
+            this.context.ocs.usersService.unlistenOnUserupdate(this.userID, this.handleUserdataUpdate);
+        }
     }
 
     handleUserdataUpdate(userdata) {
@@ -37,11 +43,21 @@ class ChatMessage extends Component {
     }
 
     render() {
+        let part;
+        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
+            part = (
+                <span>
+                    <span className={this.css_classes}>{this.state.userdata.username}: </span>
+                    {this.msg}
+                </span>
+            );
+        } else {
+            part = <span className="system-message">{this.msg}</span>;
+        }
         return (
             <div className="ChatMessage">
                 <span className="time">{this.time_str}</span>
-                <span className={this.css_classes}>{this.state.userdata.username}: </span>
-                {this.msg}
+                {part}
             </div>
         );
     }
