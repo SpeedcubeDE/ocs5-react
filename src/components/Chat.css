@@ -1,4 +1,24 @@
 
 .Chat {
-    padding: 12px;
+    position: relative;
 }
+
+.Chat .scrollArea {
+    height: 100%;
+    padding: 12px;
+    overflow-y: scroll;
+}
+
+.Chat button.scrollToBottomBar {
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    color: wheat;
+    border: none;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 4pt;
+}
+
