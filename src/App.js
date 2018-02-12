@@ -6,30 +6,41 @@ import Connection from "./business/Connection";
 import ChatInput from "./components/ChatInput";
 import OCS from "./business/OCS"
 import Cookie from 'js-cookie'
+import Users from "./components/Users";
+import Rooms from "./components/Rooms";
+import Parties from "./components/Parties";
 
 class App extends Component {
     constructor() {
         super();
         // TODO display what server you're connected to somewhere
         const serverHost = Cookie.get("serverHost") || window.location.hostname;
-        this.connection = new Connection("wss://" + serverHost + ":34543/websocket");
-        this.connection.listen("login", data => {
+        const connection = new Connection("wss://" + serverHost + ":34543/websocket");
+        connection.onEvent.listen("login", data => {
             if (data["login"]) {
                 console.log("Login successful!");
             } else {
                 console.log("Login failed!");
             }
         });
-        setInterval(function () {
-            this.connection.send("heartbeat", {});
-        }.bind(this), 60000);
-        this.connection.listen("open", () => {
+        setInterval(() => connection.send("heartbeat", {}), 60000);
+        connection.onEvent.listen("open", () => {
             const loginToken = Cookie.get("token") || "2018"; // TODO remove debug token
-            this.connection.send("login", {key: loginToken});
+            connection.send("login", {key: loginToken});
         });
-        this.ocs = new OCS(this.connection);
+        connection.onEvent.listen("alert", alert => {
+            Notification.requestPermission(permission => {
+                if (permission === "granted") {
+                    new Notification("OCS-Alert", {
+                        body: alert.msg,
+                        sticky: true
+                    })
+                }
+            })
+        });
+        this.ocs = new OCS(connection);
         window.ocs = this.ocs; // expose for in-browser debugging
-        this.connection.connect();
+        connection.connect();
     }
 
     getChildContext() {
@@ -39,8 +50,15 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Chat/>
-                <ChatInput/>
+                <div id="left">
+                    <Chat/>
+                    <ChatInput/>
+                </div>
+                <div id="right">
+                    <Users/>
+                    <Parties/>
+                    <Rooms/>
+                </div>
             </div>
         );
     }
