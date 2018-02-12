@@ -1,58 +1,75 @@
 
 class UsersService {
     constructor(connection) {
-        this.connection = connection;
-        this.connection.listen("userlist", data => {
-            data.users.forEach(user => this.handleUserdata(user));
+        connection.listen("userlist", data => {
+            data.users.forEach(user => this._handleUserdata(user));
         });
-        this.connection.listen("user", data => {
+        connection.listen("user", data => {
             if (data.action === "data") {
-                this.handleUserdata(data.user);
+                this._handleUserdata(data.user);
             } else {
                 console.warn("Unrecognized user-event action: %O", data);
             }
         });
 
-        this.users = new Map();
-        this.dummy_user = {
+        this._users = new Map();
+        this._onUserdataChangedCallbacks = new Map(); // userID -> callbacks
+        this._onAnythingChangedCallbacks = [];
+
+        const styleNode = document.createElement("style");
+        styleNode.appendChild(document.createTextNode("")); // webkit workaround
+        document.head.appendChild(styleNode);
+        this._stylesheet = styleNode.sheet;
+        this._stylesheetRuleindices = new Map(); // userID -> stylesheet-index
+    }
+
+    getUser(userID) {
+        return this._users.get(userID);
+    }
+
+    getUserOrDummy(userID) {
+        return this._users.get(userID) || {
             connected: false,
             username: "?",
             rank: "",
             status: ""
         };
-        this.userdata_changed_callbacks = new Map(); // userID -> callbacks
-
-        const styleNode = document.createElement("style");
-        styleNode.appendChild(document.createTextNode("")); // webkit workaround
-        document.head.appendChild(styleNode);
-        this.stylesheet = styleNode.sheet;
-        this.stylesheet_ruleindices = new Map(); // userID -> stylesheet-Index
     }
 
     listenOnUserupdate(userID, callback) {
-        if (!this.userdata_changed_callbacks.has(userID)) {
-            this.userdata_changed_callbacks.set(userID, [])
+        if (!this._onUserdataChangedCallbacks.has(userID)) {
+            this._onUserdataChangedCallbacks.set(userID, [])
         }
-        this.userdata_changed_callbacks.get(userID).push(callback);
+        this._onUserdataChangedCallbacks.get(userID).push(callback);
     }
 
     unlistenOnUserupdate(userID, callback) {
-        if (this.userdata_changed_callbacks.has(userID)) {
-            let callbacks = this.userdata_changed_callbacks.get(userID);
+        if (this._onUserdataChangedCallbacks.has(userID)) {
+            let callbacks = this._onUserdataChangedCallbacks.get(userID);
             const index = callbacks.indexOf(callback);
             if (index >= 0) callbacks.splice(index, 1);
         }
     }
 
-    notifyUserupdate(user) {
-        if (this.userdata_changed_callbacks.has(user.id)) {
-            for (const callback of this.userdata_changed_callbacks.get(user.id)) {
+    listenOnAll(callback) {
+        this._onAnythingChangedCallbacks.push(callback);
+    }
+
+    unlistenOnAll(callback) {
+        const index = this._onAnythingChangedCallbacks.indexOf(callback);
+        if (index >= 0) this._onAnythingChangedCallbacks.splice(index, 1);
+    }
+
+    _notifyUserupdate(user) {
+        if (this._onUserdataChangedCallbacks.has(user.id)) {
+            for (const callback of this._onUserdataChangedCallbacks.get(user.id)) {
                 callback(user);
             }
         }
+        this._onAnythingChangedCallbacks.forEach(callback => callback());
     }
 
-    static validateUserdata(user) {
+    static _validateUserdata(user) {
         // some extra validation since we do manual string interpolation for the css rules,
         // which puts us at risk for XSS-like-attacks
         let success = true;
@@ -70,22 +87,22 @@ class UsersService {
         return success;
     }
 
-    handleUserdata(user) {
-        if (!UsersService.validateUserdata(user)) {
+    _handleUserdata(user) {
+        if (!UsersService._validateUserdata(user)) {
             console.error("User didn't pass validation and was ignored: %O", user);
             return;
         }
-        this.users.set(user.id, user);
+        this._users.set(user.id, user);
         const rule = `.username.user-${user.id} { color: #${user.nameColor}; }`;
-        const ruleindex = this.stylesheet_ruleindices.get(user.id);
+        const ruleindex = this._stylesheetRuleindices.get(user.id);
         if (ruleindex === undefined) {
-            const new_ruleindex = this.stylesheet.insertRule(rule, this.stylesheet.cssRules.length);
-            this.stylesheet_ruleindices.set(user.id, new_ruleindex);
+            const newRuleindex = this._stylesheet.insertRule(rule, this._stylesheet.cssRules.length);
+            this._stylesheetRuleindices.set(user.id, newRuleindex);
         } else {
-            this.stylesheet.deleteRule(ruleindex);
-            this.stylesheet.insertRule(rule, ruleindex);
+            this._stylesheet.deleteRule(ruleindex);
+            this._stylesheet.insertRule(rule, ruleindex);
         }
-        this.notifyUserupdate(user);
+        this._notifyUserupdate(user);
     }
 }
 

@@ -1,30 +1,30 @@
 
 class Connection {
-    eventColor = "color: green; font-weight: bold;";
+    static eventColor = "color: green; font-weight: bold;";
 
     constructor(url) {
-        this.websocket = null;
-        this.url = url;
-        this.callbacks = new Map();
+        this._websocket = null;
+        this._url = url;
+        this._onEventCallbacks = new Map();
     }
 
     connect() {
-        this.websocket = new WebSocket(this.url);
+        this._websocket = new WebSocket(this._url);
 
-        this.websocket.onopen = event => {
-            this.receive("open", event);
+        this._websocket.onopen = event => {
+            this._onReceiveEvent("open", event);
         };
-        this.websocket.onclose = event => {
-            this.receive("close", event);
+        this._websocket.onclose = event => {
+            this._onReceiveEvent("close", event);
         };
-        this.websocket.onerror = event => {
-            this.receive("error", event);
+        this._websocket.onerror = event => {
+            this._onReceiveEvent("error", event);
         };
-        this.websocket.onmessage = event => {
+        this._websocket._onMessageCallbacks = event => {
             const data = JSON.parse(event.data);
             const type = data.type;
             delete data.type;
-            this.receive(type, data);
+            this._onReceiveEvent(type, data);
         };
     }
 
@@ -32,14 +32,14 @@ class Connection {
         console.log("%cSending%c event %c%s%c with data: %O",
             "color: DarkGoldenrod; font-weight: bold;", "", this.eventColor, type, "", Object.assign({}, data));
         data["type"] = type;
-        this.websocket.send(JSON.stringify(data));
+        this._websocket.send(JSON.stringify(data));
     }
 
-    receive(type, data) {
+    _onReceiveEvent(type, data) {
         console.log("%cReceiving%c event %c%s%c with data: %O",
             "color: DarkOrchid; font-weight: bold;", "", this.eventColor, type, "", data);
-        if (this.callbacks.has(type)) {
-            for (const callback of this.callbacks.get(type)) {
+        if (this._onEventCallbacks.has(type)) {
+            for (const callback of this._onEventCallbacks.get(type)) {
                 callback(data);
             }
         } else {
@@ -48,10 +48,18 @@ class Connection {
     }
 
     listen(type, callback) {
-        if (!this.callbacks.has(type)) {
-            this.callbacks.set(type, []);
+        if (!this._onEventCallbacks.has(type)) {
+            this._onEventCallbacks.set(type, []);
         }
-        this.callbacks.get(type).push(callback);
+        this._onEventCallbacks.get(type).push(callback);
+    }
+
+    unlisten(type, callback) {
+        if (this._onEventCallbacks.has(type)) {
+            const callbacks = this._onEventCallbacks.get(type);
+            const index = callbacks.indexOf(callback);
+            if (index >= 0) callbacks.splice(index, 1);
+        }
     }
 
 }

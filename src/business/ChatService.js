@@ -1,22 +1,24 @@
 
 class ChatService {
     constructor(connection) {
-        this.connection = connection;
-        this.onmessage = [];
-        this.connection.listen("chat", data => this.onmessage.forEach(callback => callback(data)));
+        this._connection = connection;
+        this._onMessageCallbacks = [];
+        this._connection.listen("chat", data => {
+            this._onMessageCallbacks.forEach(callback => callback(data))
+        });
     }
 
     listenOnMessage(callback) {
-        this.onmessage.push(callback);
+        this._onMessageCallbacks.push(callback);
     }
 
     unlistenOnMessage(callback) {
-        const index = this.onmessage.indexOf(callback);
-        if (index >= 0) this.onmessage.splice(index, 1);
+        const index = this._onMessageCallbacks.indexOf(callback);
+        if (index >= 0) this._onMessageCallbacks.splice(index, 1);
     }
 
     sendMessage(roomID, message) {
-        this.connection.send("chat", {
+        this._connection.send("chat", {
             roomID: roomID,
             msg: message
         });

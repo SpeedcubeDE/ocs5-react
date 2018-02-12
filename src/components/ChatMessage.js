@@ -18,8 +18,7 @@ class ChatMessage extends Component {
             .replace(/.*(\d{2}:\d{2}):\d{2}.*/, "$1");
         this.css_classes = "username user-" + this.userID;
 
-        let userdata = this.context.ocs.usersService.users.get(this.userID)
-            || this.context.ocs.usersService.dummy_user;
+        let userdata = this.context.ocs.usersService.getUserOrDummy(this.userID);
         this.state = {
             userdata: userdata
         };
