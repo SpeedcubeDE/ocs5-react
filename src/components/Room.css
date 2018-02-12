@@ -1,0 +1,35 @@
+
+.Room {
+    width: 100%;
+}
+
+.Room .inner {
+    width: 100%;
+    padding: 0.3em;
+}
+
+/* TODO better visualized joined rooms */
+.Room.joined .name:before {
+    content: "✅ ";
+}
+.Room.joined .name {
+    font-weight: bold;
+}
+
+.Room.selected .inner {
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.Room .inner:hover {
+    background-color: rgba(50, 100, 150, 0.3);
+}
+
+.Room .name {
+    display: inline-block;
+    width: 50%;
+}
+
+.Room .userNum {
+    display: inline-block;
+    width: 50%;
+}

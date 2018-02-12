@@ -10,28 +10,28 @@ class Users extends Component {
         this.state = {
             roomID: RoomsService.NO_ROOM
         };
-        this.onSelectRoom = this.onSelectRoom.bind(this);
-        this.onRoomChange = this.onRoomChange.bind(this);
+        this._onSelectRoom = this._onSelectRoom.bind(this);
+        this._onRoomUsersChange = this._onRoomUsersChange.bind(this);
     }
 
     componentDidMount() {
-        this.context.ocs.roomsService.onRoomSelect.listen(this.onSelectRoom);
-        this.onSelectRoom(this.context.ocs.roomsService.selectedRoom);
+        this.context.ocs.roomsService.onRoomSelect.listen(this._onSelectRoom);
+        this._onSelectRoom(this.context.ocs.roomsService.selectedRoom);
     }
 
     componentWillUnmount() {
-        this.context.ocs.roomsService.onRoomSelect.unlisten(this.onSelectRoom);
+        this.context.ocs.roomsService.onRoomSelect.unlisten(this._onSelectRoom);
     }
 
-    onSelectRoom(roomID) {
-        this.context.ocs.roomsService.onRoomChange.unlisten(this.state.roomID);
-        this.context.ocs.roomsService.onRoomChange.listen(roomID, this.onRoomChange);
+    _onSelectRoom(roomID) {
+        this.context.ocs.roomsService.onRoomUsersChange.unlisten(this.state.roomID);
+        this.context.ocs.roomsService.onRoomUsersChange.listen(roomID, this._onRoomUsersChange);
         this.setState({
             roomID: roomID
         });
     }
 
-    onRoomChange() {
+    _onRoomUsersChange() {
         this.forceUpdate();
     }
 

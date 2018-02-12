@@ -6,12 +6,14 @@ class RoomsService {
     static NO_ROOM = -1;
 
     constructor(connection) {
+        this._connection = connection;
         this._rooms = new Map();
         this._roomUsers = new Map();
         this._selectedRoom = RoomsService.NO_ROOM;
 
         this.onRoomSelect = new PubSubEvent();
-        this.onRoomChange = new SectionedPubSubEvent();
+        this.onRoomDataChange = new SectionedPubSubEvent();
+        this.onRoomUsersChange = new SectionedPubSubEvent();
         this.onRoomlistChange = new PubSubEvent();
 
         let initialized = false;
@@ -25,13 +27,14 @@ class RoomsService {
                     initialized = true;
                 }
                 this._rooms.set(room.id, room);
-                this.onRoomChange.notify(room.id);
+                this.onRoomDataChange.notify(room);
             }
             this.onRoomlistChange.notify(this.getRooms());
         });
         connection.onEvent.listen("roomUserlist", data => {
-            this._roomUsers.set(data.roomID, data.users.map(obj => obj.id)); // ids are nested in objects
-            this.onRoomChange.notify(data.roomID);
+            const users = data.users.map(obj => obj.id); // ids are nested in objects
+            this._roomUsers.set(data.roomID, users);
+            this.onRoomUsersChange.notify(data.roomID, users);
         });
     }
 
@@ -39,14 +42,30 @@ class RoomsService {
         return Array.from(this._rooms.values());
     }
 
+    getRoomForID(roomID) {
+        return this._rooms.get(roomID);
+    }
+
     getUserIDsForRoom(roomID) {
         return this._roomUsers.get(roomID) || [];
+    }
+
+    getSelectedRoom() {
+        return this._selectedRoom;
     }
 
     selectRoom(roomID) {
         if (roomID === this._selectedRoom) return;
         this._selectedRoom = roomID;
         this.onRoomSelect.notify(roomID);
+    }
+
+    joinRoom(roomID, password) {
+        this._connection.send("chatRoom", {
+            "action": "enter",
+            "roomID": roomID,
+            "password": password || ""
+        });
     }
 }
 
