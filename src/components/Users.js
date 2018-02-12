@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import "./Users.css"
 import RoomsService from "../business/RoomsService";
@@ -42,11 +42,16 @@ class Users extends Component {
         const users = this.context.ocs.roomsService
             .getUserIDsForRoom(this.state.roomID)
             .map(id => this.context.ocs.usersService.getUserOrDummy(id))
-            .map(user => <Username userID={user.id} key={user.id}/>);
-        // TODO User-Objekte mit callbacks?
+            .map(user => {
+                return (<tr key={user.id}>
+                    <td className="username"><Username userID={user.id}/></td>
+                    <td className="rank">{user.rank}</td>
+                    <td className="status">{user.status}</td>
+                </tr>);
+            });
         return (
             <div className="Users">
-                {users}
+                <table><tbody>{users}</tbody></table>
             </div>
         );
     }
