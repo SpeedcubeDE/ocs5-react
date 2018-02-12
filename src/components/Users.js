@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import "./Users.css"
 import RoomsService from "../business/RoomsService";
+import Username from "./Username";
 
 class Users extends Component {
     constructor() {
@@ -41,7 +42,7 @@ class Users extends Component {
         const users = this.context.ocs.roomsService
             .getUserIDsForRoom(this.state.roomID)
             .map(id => this.context.ocs.usersService.getUserOrDummy(id))
-            .map(user => <div key={user.id}>{user.username}</div>);
+            .map(user => <Username userID={user.id} key={user.id}/>);
         // TODO User-Objekte mit callbacks?
         return (
             <div className="Users">

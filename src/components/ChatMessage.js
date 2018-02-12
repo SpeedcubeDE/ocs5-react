@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import "./ChatMessage.css"
 import PropTypes from "prop-types";
+import UsersService from "../business/UsersService";
+import Username from "./Username";
 
 class ChatMessage extends Component {
-    static SYSTEM_USER_ID = -1;
-
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.userID = props.message.userID;
         this.roomID = props.message.roomID;
         this.time = props.message.time;
@@ -16,38 +16,14 @@ class ChatMessage extends Component {
         this.time_str = new Date(this.time * 1000)
             .toTimeString()
             .replace(/.*(\d{2}:\d{2}):\d{2}.*/, "$1");
-        this.css_classes = "username user-" + this.userID;
-
-        let userdata = this.context.ocs.usersService.getUserOrDummy(this.userID);
-        this.state = {
-            userdata: userdata
-        };
-        this.handleUserdataUpdate = this.handleUserdataUpdate.bind(this);
-    }
-
-    componentDidMount() {
-        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
-            this.context.ocs.usersService.onUserdataChanged.listen(this.userID, this.handleUserdataUpdate);
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
-            this.context.ocs.usersService.onUserdataChanged.unlisten(this.userID, this.handleUserdataUpdate);
-        }
-    }
-
-    handleUserdataUpdate(userdata) {
-        this.setState({userdata: userdata});
     }
 
     render() {
         let part;
-        if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
+        if (this.userID !== UsersService.SYSTEM_USER_ID) {
             part = (
                 <span>
-                    <span className={this.css_classes}>{this.state.userdata.username}: </span>
-                    {this.msg}
+                    <Username userID={this.userID}/>&nbsp;&ndash;&nbsp;{this.msg}
                 </span>
             );
         } else {
