@@ -1,10 +1,11 @@
+import SectionedPubSubEvent from "./SectionedPubSubEvent";
 
 class UsersService {
     constructor(connection) {
-        connection.listen("userlist", data => {
+        connection.onEvent.listen("userlist", data => {
             data.users.forEach(user => this._handleUserdata(user));
         });
-        connection.listen("user", data => {
+        connection.onEvent.listen("user", data => {
             if (data.action === "data") {
                 this._handleUserdata(data.user);
             } else {
@@ -13,8 +14,7 @@ class UsersService {
         });
 
         this._users = new Map();
-        this._onUserdataChangedCallbacks = new Map(); // userID -> callbacks
-        this._onAnythingChangedCallbacks = [];
+        this.onUserdataChanged = new SectionedPubSubEvent();
 
         const styleNode = document.createElement("style");
         styleNode.appendChild(document.createTextNode("")); // webkit workaround
@@ -34,39 +34,6 @@ class UsersService {
             rank: "",
             status: ""
         };
-    }
-
-    listenOnUserupdate(userID, callback) {
-        if (!this._onUserdataChangedCallbacks.has(userID)) {
-            this._onUserdataChangedCallbacks.set(userID, [])
-        }
-        this._onUserdataChangedCallbacks.get(userID).push(callback);
-    }
-
-    unlistenOnUserupdate(userID, callback) {
-        if (this._onUserdataChangedCallbacks.has(userID)) {
-            let callbacks = this._onUserdataChangedCallbacks.get(userID);
-            const index = callbacks.indexOf(callback);
-            if (index >= 0) callbacks.splice(index, 1);
-        }
-    }
-
-    listenOnAll(callback) {
-        this._onAnythingChangedCallbacks.push(callback);
-    }
-
-    unlistenOnAll(callback) {
-        const index = this._onAnythingChangedCallbacks.indexOf(callback);
-        if (index >= 0) this._onAnythingChangedCallbacks.splice(index, 1);
-    }
-
-    _notifyUserupdate(user) {
-        if (this._onUserdataChangedCallbacks.has(user.id)) {
-            for (const callback of this._onUserdataChangedCallbacks.get(user.id)) {
-                callback(user);
-            }
-        }
-        this._onAnythingChangedCallbacks.forEach(callback => callback());
     }
 
     static _validateUserdata(user) {
@@ -102,7 +69,7 @@ class UsersService {
             this._stylesheet.deleteRule(ruleindex);
             this._stylesheet.insertRule(rule, ruleindex);
         }
-        this._notifyUserupdate(user);
+        this.onUserdataChanged.notify(user.id, user);
     }
 }
 

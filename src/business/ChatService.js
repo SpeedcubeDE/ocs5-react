@@ -1,20 +1,10 @@
+import PubSubEvent from "./PubSubEvent";
 
 class ChatService {
     constructor(connection) {
         this._connection = connection;
-        this._onMessageCallbacks = [];
-        this._connection.listen("chat", data => {
-            this._onMessageCallbacks.forEach(callback => callback(data))
-        });
-    }
-
-    listenOnMessage(callback) {
-        this._onMessageCallbacks.push(callback);
-    }
-
-    unlistenOnMessage(callback) {
-        const index = this._onMessageCallbacks.indexOf(callback);
-        if (index >= 0) this._onMessageCallbacks.splice(index, 1);
+        this.onMessage = new PubSubEvent();
+        this._connection.onEvent.listen("chat", this.onMessage.notify);
     }
 
     sendMessage(roomID, message) {

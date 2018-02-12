@@ -27,13 +27,13 @@ class ChatMessage extends Component {
 
     componentDidMount() {
         if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
-            this.context.ocs.usersService.listenOnUserupdate(this.userID, this.handleUserdataUpdate);
+            this.context.ocs.usersService.onUserdataChanged.listen(this.userID, this.handleUserdataUpdate);
         }
     }
 
     componentWillUnmount() {
         if (this.userID !== ChatMessage.SYSTEM_USER_ID) {
-            this.context.ocs.usersService.unlistenOnUserupdate(this.userID, this.handleUserdataUpdate);
+            this.context.ocs.usersService.onUserdataChanged.unlisten(this.userID, this.handleUserdataUpdate);
         }
     }
 

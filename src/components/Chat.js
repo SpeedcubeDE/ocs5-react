@@ -23,13 +23,13 @@ class Chat extends Component {
     }
 
     componentDidMount() {
-        this.context.ocs.chatService.listenOnMessage(this.chatEvent);
+        this.context.ocs.chatService.onMessage.listen(this.chatEvent);
         window.addEventListener("resize", this.onResize);
         this.scrollarea_dom_element = ReactDOM.findDOMNode(this).querySelector(".scrollArea");
     }
 
     componentWillUnmount() {
-        this.context.ocs.chatService.unlistenOnMessage(this.chatEvent);
+        this.context.ocs.chatService.onMessage.unlisten(this.chatEvent);
         window.removeEventListener("resize", this.onResize);
     }
 
