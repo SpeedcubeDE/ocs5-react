@@ -18,7 +18,6 @@
 .Chat {
     width: 100%;
     height: 90%;
-    font-size: 0.9em;
 }
 
 .ChatInput {
@@ -32,6 +31,7 @@
 
 .Parties {
     height: 30%;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .Channels {
