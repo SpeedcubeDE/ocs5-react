@@ -29,14 +29,14 @@ class Connection {
     }
 
     send(type, data) {
-        console.log("%cSending%cevent%c%s%cwith data: %O",
+        console.log("%cSending%c event %c%s%c with data: %O",
             "color: DarkGoldenrod; font-weight: bold;", "", this.eventColor, type, "", Object.assign({}, data));
         data["type"] = type;
         this.websocket.send(JSON.stringify(data));
     }
 
     receive(type, data) {
-        console.log("%cReceiving%cevent%c%s%cwith data: %O",
+        console.log("%cReceiving%c event %c%s%c with data: %O",
             "color: DarkOrchid; font-weight: bold;", "", this.eventColor, type, "", data);
         if (this.callbacks.has(type)) {
             for (const callback of this.callbacks.get(type)) {
