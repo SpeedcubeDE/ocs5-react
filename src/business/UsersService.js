@@ -1,4 +1,5 @@
 import SectionedPubSubEvent from "./SectionedPubSubEvent";
+import User from "../models/User";
 
 class UsersService {
     static SYSTEM_USER_ID = -1;
@@ -83,7 +84,8 @@ class UsersService {
         return success;
     }
 
-    _handleUserdata(user) {
+    _handleUserdata(userRaw) {
+        const user = Object.assign(new User, userRaw);
         if (!UsersService._validateUserdata(user)) {
             console.error("User didn't pass validation and was ignored: %O", user);
             return;
