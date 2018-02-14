@@ -28,6 +28,7 @@ class App extends Component {
             const loginToken = Cookie.get("token") || "2018"; // TODO remove debug token
             connection.send("login", {key: loginToken});
         });
+        // TODO remove test-notifications:
         connection.onEvent.listen("alert", alert => {
             Notification.requestPermission(permission => {
                 if (permission === "granted") {
@@ -50,15 +51,11 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <div id="left">
-                    <Chat/>
-                    <ChatInput/>
-                </div>
-                <div id="right">
-                    <Users/>
-                    <Parties/>
-                    <Rooms/>
-                </div>
+                <Chat/>
+                <ChatInput/>
+                <Users/>
+                <Parties/>
+                <Rooms/>
             </div>
         );
     }

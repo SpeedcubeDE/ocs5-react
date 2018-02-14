@@ -14,11 +14,6 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-html, body, #root {
-    /* webkit workaround: relative height only works if it propagates all the way to the document-root */
-    height: 100%;
-}
-
 table {
     border-spacing: 0;
 }
