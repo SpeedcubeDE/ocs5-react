@@ -43,13 +43,13 @@ class Chat extends Component {
     }
 
     onRoomSelect(roomID) {
+        this.nextScrollBehaviour = "instant";
         this.context.ocs.chatService.onMessage.unlisten(this.roomID, this.onChatMessage);
         this.context.ocs.chatService.onMessage.listen(roomID, this.onChatMessage);
         this.roomID = roomID;
         this.setState({
             chatmessages: this.context.ocs.chatService.getMessagesForRoomID(roomID)
         });
-        this.nextScrollBehaviour = "instant";
     }
 
     onChatMessage(data) {
