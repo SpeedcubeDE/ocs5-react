@@ -35,7 +35,7 @@ class ChatService {
     }
 
     getMessagesForRoomID(roomID) {
-        return this._messages.get(roomID) || [];
+        return Array.from(this._messages.get(roomID) || []);
     }
 
     sendMessage(roomID, message) {
