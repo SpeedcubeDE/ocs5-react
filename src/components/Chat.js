@@ -20,6 +20,7 @@ class Chat extends Component {
         this.scrollAnchor = null;
         this.scrollareaElement = null;
         this.lastScrollOffset = 0;
+        this.nextScrollBehaviour = null;
         this.onChatMessage = this.onChatMessage.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.reanchor = this.reanchor.bind(this);
@@ -48,23 +49,26 @@ class Chat extends Component {
         this.setState({
             chatmessages: this.context.ocs.chatService.getMessagesForRoomID(roomID)
         });
+        this.nextScrollBehaviour = "instant";
     }
 
     onChatMessage(data) {
         const newChatmessages = this.state.chatmessages.slice();
         newChatmessages.push(data);
         this.setState({chatmessages: newChatmessages});
+        this.nextScrollBehaviour = "smooth";
     }
 
-    scrollToBottom() {
+    scrollToBottom(behavior) {
         if (this.state.anchored) {
-            this.scrollAnchor.scrollIntoView({behavior: "smooth"});
+            this.scrollAnchor.scrollIntoView({behavior: behavior});
         }
     }
 
     componentDidUpdate() {
         this.lastScrollOffset = this.scrollareaElement.scrollTop;
-        this.scrollToBottom();
+        this.scrollToBottom(this.nextScrollBehaviour == null ? "smooth" : this.nextScrollBehaviour);
+        this.nextScrollBehaviour = null;
     }
 
     onScroll(event) {
@@ -88,7 +92,7 @@ class Chat extends Component {
      */
     onResize(event) {
         this.onScroll(event);
-        this.scrollToBottom();
+        this.scrollToBottom("instant");
     }
 
     unanchor() {
