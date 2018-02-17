@@ -18,7 +18,7 @@ class ChatInput extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        this.context.ocs.chatService.sendMessage(1, this.state.inputText);
+        this.context.ocs.chatService.sendMessage(this.context.ocs.roomsService.getSelectedRoomID(), this.state.inputText);
         this.setState({inputText: ""});
     }
 

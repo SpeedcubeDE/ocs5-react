@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import "./Chat.css"
 import ChatMessage from "./ChatMessage";
 import uuid from 'uuid';
 import I18n from './I18n';
+import RoomsService from "../business/RoomsService";
 
 class Chat extends Component {
+    static MAX_MESSAGES = 200;
+    static UPDATE_DELAY_MS = 30;
 
     constructor() {
         super();
@@ -14,27 +16,41 @@ class Chat extends Component {
             chatmessages: [],
             anchored: true
         };
-        this.scroll_anchor = null;
-        this.scrollarea_dom_element = null;
-        this.last_scroll_offset = 0;
-        this.chatEvent = this.chatEvent.bind(this);
+        this.roomID = RoomsService.NO_ROOM;
+        this.scrollAnchor = null;
+        this.scrollareaElement = null;
+        this.lastScrollOffset = 0;
+        this.onChatMessage = this.onChatMessage.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.onReanchor = this.onReanchor.bind(this);
+        this.reanchor = this.reanchor.bind(this);
+        this.unanchor = this.unanchor.bind(this);
         this.onResize = this.onResize.bind(this);
+        this.onRoomSelect = this.onRoomSelect.bind(this);
+
+        this.doUpdateNextTime = true;
+        this.updateLaterTimeout = null;
     }
 
     componentDidMount() {
-        this.context.ocs.chatService.onMessage.listen(this.chatEvent);
+        this.context.ocs.roomsService.onRoomSelect.listen(this.onRoomSelect);
         window.addEventListener("resize", this.onResize);
-        this.scrollarea_dom_element = ReactDOM.findDOMNode(this).querySelector(".scrollArea");
     }
 
     componentWillUnmount() {
-        this.context.ocs.chatService.onMessage.unlisten(this.chatEvent);
+        this.context.ocs.roomsService.onRoomSelect.unlisten(this.onRoomSelect);
         window.removeEventListener("resize", this.onResize);
     }
 
-    chatEvent(data) {
+    onRoomSelect(roomID) {
+        this.context.ocs.chatService.onMessage.unlisten(this.roomID, this.onChatMessage);
+        this.context.ocs.chatService.onMessage.listen(roomID, this.onChatMessage);
+        this.roomID = roomID;
+        this.setState({
+            chatmessages: this.context.ocs.chatService.getMessagesForRoomID(roomID)
+        });
+    }
+
+    onChatMessage(data) {
         const newChatmessages = this.state.chatmessages.slice();
         newChatmessages.push(data);
         this.setState({chatmessages: newChatmessages});
@@ -42,27 +58,28 @@ class Chat extends Component {
 
     scrollToBottom() {
         if (this.state.anchored) {
-            this.scroll_anchor.scrollIntoView({behavior: "smooth"});
+            this.scrollAnchor.scrollIntoView({behavior: "smooth"});
         }
     }
 
     componentDidUpdate() {
+        this.lastScrollOffset = this.scrollareaElement.scrollTop;
         this.scrollToBottom();
     }
 
     onScroll(event) {
-        const scroll_offset = this.scrollarea_dom_element.scrollTop;
-        const scroll_delta = scroll_offset - this.last_scroll_offset;
-        this.last_scroll_offset = scroll_offset;
+        const scroll_offset = this.scrollareaElement.scrollTop;
+        const scroll_delta = scroll_offset - this.lastScrollOffset;
+        this.lastScrollOffset = scroll_offset;
 
-        const max_scroll_offset = this.scrollarea_dom_element.scrollHeight - this.scrollarea_dom_element.offsetHeight;
+        const max_scroll_offset = this.scrollareaElement.scrollHeight - this.scrollareaElement.offsetHeight;
          if (scroll_delta < 0 && event.type !== "resize") {
-            // user scrolled up, un-anchor!
-            this.setState({anchored: false});
-        } else if (scroll_offset >= max_scroll_offset) {
-             // scrolled all the way to the bottom, re-anchor
-            this.setState({anchored: true});
-        }
+             // user scrolled up, un-anchor!
+             this.unanchor();
+         } else if (scroll_offset >= max_scroll_offset) {
+              // scrolled all the way to the bottom, re-anchor
+             this.reanchor();
+         }
     }
 
     /**
@@ -74,21 +91,45 @@ class Chat extends Component {
         this.scrollToBottom();
     }
 
-    onReanchor() {
-        this.setState({anchored: true});
+    unanchor() {
+        if (this.state.anchored) this.setState({anchored: false});
+    }
+
+    reanchor() {
+        if (!this.state.anchored) this.setState({anchored: true});
+    }
+
+    shouldComponentUpdate() {
+        if (this.doUpdateNextTime) {
+            this.doUpdateNextTime = false;
+            return true;
+        }
+        this.updateLater();
+        return false;
+    }
+
+    updateLater() {
+        if (this.updateLaterTimeout !== null) {
+            clearTimeout(this.updateLaterTimeout);
+        }
+        this.updateLaterTimeout = setTimeout(function () {
+            this.doUpdateNextTime = true;
+            this.forceUpdate();
+        }.bind(this), Chat.UPDATE_DELAY_MS);
     }
 
     render() {
         const chatmessages = this.state.chatmessages
+            .slice(this.state.chatmessages.length-Chat.MAX_MESSAGES, this.state.chatmessages.length)
             .map(message => <ChatMessage message={message} key={uuid.v4()}/>);
         const scrollToBottomBar = this.state.anchored
             ? null
-            : <button className="scrollToBottomBar" onClick={this.onReanchor}>
+            : <button className="scrollToBottomBar" onClick={this.reanchor}>
                 <I18n path="chat.autoscroll_bar_text" /></button>;
         const scrollArea = (
-            <div className="scrollArea" onScroll={this.onScroll}>
+            <div className="scrollArea" onScroll={this.onScroll} ref={instance => this.scrollareaElement = instance}>
                 {chatmessages}
-                <div ref={elem => {this.scroll_anchor = elem;}}>&nbsp;</div>
+                <div ref={elem => this.scrollAnchor = elem}>&nbsp;</div>
             </div>
         );
         return (

@@ -16,26 +16,35 @@ class RoomsService {
         this.onRoomUsersChange = new SectionedPubSubEvent();
         this.onRoomlistChange = new PubSubEvent();
 
-        let initialized = false;
         connection.onEvent.listen("roomlist", data => {
             this._rooms.clear();
             for (const roomRaw of data.rooms) {
                 const room = Object.assign(new Room, roomRaw);
-                if (!initialized && room.inRoom) {
-                    // join some room by default
-                    this.selectRoom(room.id);
-                    initialized = true;
-                }
                 this._rooms.set(room.id, room);
-                this.onRoomDataChange.notify(room);
+                this.onRoomDataChange.notify(room.id, room);
             }
             this.onRoomlistChange.notify(this.getRooms());
+            this._switchRoomIfNecessary();
         });
         connection.onEvent.listen("roomUserlist", data => {
             const users = data.users.map(obj => obj.id); // ids are nested in objects
             this._roomUsers.set(data.roomID, users);
             this.onRoomUsersChange.notify(data.roomID, users);
         });
+    }
+
+    _switchRoomIfNecessary() {
+        const room = this.getRoomForID(this.getSelectedRoomID());
+        if (room === undefined || !room.inRoom) {
+            // not in room anymore, switch to some other room
+            for (const room of this.getRooms()) {
+                if (room.inRoom && !room.hasPW) {
+                    this.selectRoom(room.id);
+                    return;
+                }
+            }
+            this.selectRoom(RoomsService.NO_ROOM);
+        }
     }
 
     getRooms() {
@@ -50,7 +59,7 @@ class RoomsService {
         return this._roomUsers.get(roomID) || [];
     }
 
-    getSelectedRoom() {
+    getSelectedRoomID() {
         return this._selectedRoom;
     }
 
@@ -65,6 +74,13 @@ class RoomsService {
             "action": "enter",
             "roomID": roomID,
             "password": password || ""
+        });
+    }
+
+    leaveRoom(roomID) {
+        this._connection.send("chatRoom", {
+            "action": "leave",
+            "roomID": roomID
         });
     }
 }
