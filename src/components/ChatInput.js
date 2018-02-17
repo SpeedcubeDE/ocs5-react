@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import I18n from "./I18n";
 
 class ChatInput extends Component {
     constructor() {
@@ -25,12 +26,11 @@ class ChatInput extends Component {
         return (
             <div className="ChatInput">
                 <form onSubmit={this.handleSubmit}>
-                    <input
+                    <I18n path="chat.input_placeholder" setprop="placeholder"><input
                         className="ChatInput"
-                        placeholder="chat here..."
                         value={this.state.inputText}
                         onChange={this.handleChange}
-                    />
+                    /></I18n>
                 </form>
             </div>
         );

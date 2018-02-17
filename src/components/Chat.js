@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import "./Chat.css"
 import ChatMessage from "./ChatMessage";
 import uuid from 'uuid';
+import I18n from './I18n';
 
 class Chat extends Component {
 
@@ -83,7 +84,7 @@ class Chat extends Component {
         const scrollToBottomBar = this.state.anchored
             ? null
             : <button className="scrollToBottomBar" onClick={this.onReanchor}>
-                Click to re-enable autoscroll to bottom...</button>;
+                <I18n path="chat.autoscroll_bar_text" /></button>;
         const scrollArea = (
             <div className="scrollArea" onScroll={this.onScroll}>
                 {chatmessages}
