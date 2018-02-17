@@ -1,25 +1,28 @@
 
 .Chat {
-    position: relative;
-    background: #223;
+    background: var(--color-prim);
 }
 
 .Chat .scrollArea {
     height: 100%;
     padding: 12px;
     overflow-y: scroll;
+    /* enough height for even little text to stick to the bottom */
+    padding-top: 100%;
+    /* hide scrollbar */
+    margin-right: -25px;
+    overflow-x: hidden;
 }
 
 .Chat button.scrollToBottomBar {
     background: rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    color: wheat;
+    color: var(--color-text);
     border: none;
     font-weight: bold;
-    position: absolute;
+    position: sticky;
     bottom: 0;
     left: 0;
     width: 100%;
     padding: 4pt;
 }
-
