@@ -4,11 +4,25 @@
     box-sizing: border-box;
 }
 
+:root {
+    --color-prim: #222233;
+    --color-prim-dark: #00000c;
+    --color-prim-light: #4a495d;
+
+    --color-sec: #212121;
+    --color-sec-dark: #000000;
+    --color-sec-light: #484848;
+    --color-sec-text: #ffffff;
+
+    --color-text: #ffffff;
+    --color-text-dim: #ffffff60;
+}
+
 body {
     margin: 0;
     padding: 0;
-    background: #373737 url("./bgnoise.png");
-    color: white;
+    background: var(--color-sec) url("./bgnoise.png");
+    color: var(--color-text);
     font-size: 12pt;
     font-family: "Calibri Light", Calibri, Helvetica, Arial, sans-serif;
     text-rendering: optimizeLegibility;
