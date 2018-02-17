@@ -2,11 +2,11 @@
 .App {
     height: 100vh;
     display: grid;
-    grid-template-areas: "chat  users"
-                         "chat  parties"
-                         "chat  rooms"
-                         "input rooms";
-    grid-template-columns: auto 350px;
+    grid-template-areas: "rooms chat users"
+                         "rooms chat parties"
+                         "rooms chat parties"
+                         "input input parties";
+    grid-template-columns: min-content minmax(300px, auto) 350px;
     grid-template-rows: repeat(3, 1fr) 80px;
 }
 
@@ -25,7 +25,6 @@
 
 .Parties {
     grid-area: parties;
-    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .Rooms {

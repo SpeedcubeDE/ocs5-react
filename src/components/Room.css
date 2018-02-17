@@ -1,35 +1,94 @@
 
 .Room {
+    --leftborder-width: 4pt;
     width: 100%;
+    padding: 0.4em 0.1em 0.4em 0.3em;
+    position: relative;
+    background-color: #00000ce0;
+    color: var(--color-text-dim);
+    border-style: solid;
+    border-width: 0 0 0 var(--leftborder-width);
+    border-color: var(--color-leftborder);
+    z-index: 0;
+
+    --color-leftborder: #2f2e3d;
+    --color-leftborder-joined: #a6a4c6;
+    --color-leftborder-whisper: #322702;
+    --color-leftborder-whisper-joined: #a48324;
 }
 
-.Room .inner {
-    width: 100%;
-    padding: 0.3em;
+.Room .opacity-blocker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 0;
+    width: calc(var(--rooms-width) - var(--leftborder-width) + 1px); /* not sure why it's 1 pixel short */
+    margin-right: - var(--rooms-width);
+    height: 100%;
+    z-index: -1;
 }
 
-/* TODO better visualized joined rooms */
-.Room.joined .name:before {
-    content: "✅ ";
+.Room:hover {
+    color: var(--color-text);
 }
+
+.Room.selected {
+    background-color: #222233e0;
+    /*background-color: var(--color-prim);*/
+}
+
+.Room.selected .opacity-blocker {
+    background-color: var(--color-prim);
+}
+
+.Room.joined {
+    border-color: var(--color-leftborder-joined);
+}
+
+.Room.whisper.joined {
+    border-color: var(--color-leftborder-whisper-joined);
+}
+
+.Room.whisper {
+    border-color: var(--color-leftborder-whisper);
+}
+
+.Room .button {
+    cursor: pointer;
+    position: absolute;
+    display: none;
+    align-items: center;
+    top: 0;
+    right: 4pt;
+    height: 100%;
+    font-size: 2em;
+}
+
+.Room.joined:hover .leaveButton {
+    float:right;
+    display: inline-block;
+}
+
+.Room .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.3em;
+}
+
 .Room.joined .name {
     font-weight: bold;
 }
 
-.Room.selected .inner {
-    background: rgba(0, 255, 0, 0.1);
-}
-
-.Room .inner:hover {
-    background-color: rgba(50, 100, 150, 0.3);
-}
-
-.Room .name {
-    display: inline-block;
-    width: 50%;
+.Room:not(.selected) .name:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .Room .userNum {
-    display: inline-block;
-    width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.8em;
+    margin-top: -0.4em;
 }

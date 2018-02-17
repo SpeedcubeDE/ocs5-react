@@ -27,11 +27,13 @@ class Rooms extends Component {
     }
 
     render() {
-        const rooms = this.state.rooms.map(room => <Room roomID={room.id} key={room.id}/>);
+        const rooms = this.state.rooms
+            .sort((r1, r2) => +(r1.type==="whisper") - +(r2.type==="whisper")) // whispers at the bottom
+            .map(room => <Room roomID={room.id} key={room.id}/>);
         return (
-            <div className="Rooms">
+            <div className="Rooms"><div className="inner">
                 {rooms}
-            </div>
+            </div></div>
         );
     }
 }

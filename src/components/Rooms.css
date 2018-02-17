@@ -1,4 +1,19 @@
 
-.Rooms .Room:nth-child(odd) {
-    background-color: rgba(0, 0, 0, 0.3);
+.Rooms {
+    --rooms-width: 62pt;
+    --rooms-full-width: 160pt;
+    width: var(--rooms-width);
+    height: 100%;
+    background-color: var(--color-prim-dark);
+}
+
+.Rooms>.inner {
+    width: calc(var(--rooms-width));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: width 0.1s linear, margin-right 0.1s linear;
+}
+
+.Rooms>.inner:hover {
+    width: var(--rooms-full-width);
 }

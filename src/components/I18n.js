@@ -24,10 +24,6 @@ class I18n extends Component {
         this.context.ocs.i18nService.onLanguageChanged.unlisten(this._onLanguageChanged)
     }
 
-    text() {
-        return this.state.text;
-    }
-
     render() {
         if (this.props.setprop !== undefined) {
             const children = React.Children.map(this.props.children,
