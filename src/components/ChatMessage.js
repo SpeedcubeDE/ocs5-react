@@ -10,28 +10,32 @@ class ChatMessage extends Component {
         this.userID = props.message.userID;
         this.roomID = props.message.roomID;
         this.time = props.message.time;
-        this.msg = props.message.msg.join("\n"); // TODO why is this a list?
+        this.msgLines = props.message.msg;
         this.me = props.message.me;
 
-        this.time_str = new Date(this.time * 1000)
+        const date = new Date(this.time * 1000);
+        this.time_str = date
             .toTimeString()
             .replace(/.*(\d{2}:\d{2}):\d{2}.*/, "$1");
+        this.full_date_str = date
+            .toLocaleString();
     }
 
     render() {
         let part;
+        const msg = this.msgLines.map(msg => <span>{msg}<br /></span>);
         if (this.userID !== UsersService.SYSTEM_USER_ID) {
             part = (
-                <span>
-                    <Username userID={this.userID}/>&nbsp;&ndash;&nbsp;{this.msg}
+                <span className="message">
+                    <Username userID={this.userID}/>&nbsp;&ndash;&nbsp;{msg}
                 </span>
             );
         } else {
-            part = <span className="system-message">{this.msg}</span>;
+            part = <span className="system-message">{msg}</span>;
         }
         return (
             <div className="ChatMessage">
-                <span className="time">{this.time_str}</span>
+                <span className="time" title={this.full_date_str}>{this.time_str}</span>
                 {part}
             </div>
         );

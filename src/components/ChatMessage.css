@@ -2,14 +2,20 @@
 .ChatMessage {
     padding: 0.2em 0;
     vertical-align: middle;
+    display: grid;
+    grid-template-columns: 2.5em minmax(0, auto);
 }
 
 .time {
+    grid-column: 1 / 2;
     color: #777;
-    display: inline-block;
-    width: 3.1415926535897932384626433832795028841971693993751058209749445923em;
     font-size: 0.8em;
-    vertical-align: baseline;
+    align-self: start;
+    padding-top: 0.15em;
+}
+
+.message, .system-message {
+    grid-column: 2 / 3;
 }
 
 .system-message {
