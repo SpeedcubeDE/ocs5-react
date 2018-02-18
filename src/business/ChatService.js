@@ -39,6 +39,8 @@ class ChatService {
     }
 
     sendMessage(roomID, message) {
+        message = message.trim();
+        if (message === "") return;
         this._connection.send("chat", {
             roomID: roomID,
             msg: message
