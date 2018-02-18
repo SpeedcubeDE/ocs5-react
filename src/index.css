@@ -12,7 +12,6 @@
     --color-sec: #212121;
     --color-sec-dark: #000000;
     --color-sec-light: #484848;
-    --color-sec-text: #ffffff;
 
     --color-text: #ffffff;
     --color-text-dim: #ffffff60;
@@ -30,4 +29,27 @@ body {
 
 table {
     border-spacing: 0;
+}
+
+button, input[type=submit] {
+    background-image: linear-gradient(#333 0%, #222 100%);
+    box-shadow: 0 0 2px 0 #111;
+    border: 1px solid #111;
+    color: var(--color-text);
+    padding: 0.2em 1em;
+    border-collapse: collapse;
+    cursor: pointer;
+    height: 100%;
+}
+
+button.rounded-right, input[type=submit].rounded-right {
+    border-radius: 0 4px 4px 0;
+}
+
+button:hover, input[type=submit]:hover {
+    background-image: linear-gradient(#3c3c3c 0%, #2c2c2c 100%);
+}
+
+button:active, input[type=submit]:active {
+    background-image: linear-gradient(#1e1e1e 0%, #222 100%);
 }

@@ -23,7 +23,8 @@ class ChatMessage extends Component {
 
     render() {
         let part;
-        const msg = this.msgLines.map(msg => <span>{msg}<br /></span>);
+        let i = 0;
+        const msg = this.msgLines.map(msg => <span key={i++}>{msg}<br /></span>);
         if (this.userID !== UsersService.SYSTEM_USER_ID) {
             part = (
                 <span className="message">

@@ -85,7 +85,7 @@ class UsersService {
     }
 
     _handleUserdata(userRaw) {
-        const user = Object.assign(new User, userRaw);
+        const user = Object.assign(new User(), userRaw);
         if (!UsersService._validateUserdata(user)) {
             console.error("User didn't pass validation and was ignored: %O", user);
             return;

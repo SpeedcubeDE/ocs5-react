@@ -19,7 +19,7 @@ class RoomsService {
         connection.onEvent.listen("roomlist", data => {
             this._rooms.clear();
             for (const roomRaw of data.rooms) {
-                const room = Object.assign(new Room, roomRaw);
+                const room = Object.assign(new Room(), roomRaw);
                 this._rooms.set(room.id, room);
                 this.onRoomDataChange.notify(room.id, room);
             }

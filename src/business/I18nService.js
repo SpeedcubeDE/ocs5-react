@@ -21,7 +21,7 @@ class I18nService {
     getText(path, data) {
         let text = this._texts.get(path) || `[no translation for: ${path}]`;
         for (const [find, replace] of Object.entries(data || {})) {
-            const regex = new RegExp(`\{${find}\}`, "g");
+            const regex = new RegExp(`{${find}}`, "g");
             text = text.replace(regex, replace);
         }
         return text;
