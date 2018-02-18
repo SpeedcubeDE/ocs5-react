@@ -39,7 +39,6 @@ button, input[type=submit] {
     padding: 0.2em 1em;
     border-collapse: collapse;
     cursor: pointer;
-    height: 100%;
 }
 
 button.rounded-right, input[type=submit].rounded-right {
