@@ -26,9 +26,8 @@ class I18n extends Component {
 
     render() {
         if (this.props.setprop !== undefined) {
-            const children = React.Children.map(this.props.children,
-                    child => React.cloneElement(child, {[this.props.setprop]: this.state.text}));
-            return <span>{children}</span>
+            // must be exactly 1 child
+            return React.cloneElement(this.props.children, {[this.props.setprop]: this.state.text});
         } else {
             if (this.props.children !== undefined) {
                 console.error("I18n component for %s doesn't have a setprop property, but children: %O",

@@ -2,12 +2,13 @@
 .App {
     height: 100vh;
     display: grid;
-    grid-template-areas: "rooms chat users"
-                         "rooms chat parties"
-                         "rooms chat parties"
-                         "input input parties";
+    grid-template-areas: "rooms        chat  users"
+                         "rooms        chat  parties"
+                         "rooms        chat  parties"
+                         "roomsettings input parties"
+                         "space        space space";
     grid-template-columns: min-content minmax(300px, auto) 350px;
-    grid-template-rows: repeat(3, 1fr) 80px;
+    grid-template-rows: repeat(3, 1fr) minmax(0, auto) 2pt;
 }
 
 .Chat {
