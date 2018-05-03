@@ -63,9 +63,10 @@ class Room extends Component {
         if (this.state.isSelected) cssClasses += " selected";
         const isWhisper = this.state.room.type === "whisper";
         if (isWhisper) cssClasses += " whisper";
+        const userNum = this.state.room.userNum;
         const subrow = isWhisper
             ? <div className="userNum"><I18n path="whisper_channel"/></div>
-            : <div className="userNum">{this.state.room.userNum} users</div>;
+            : <div className="userNum">{userNum} {userNum === 1 ? "user" : "users"}</div>;
         return (
             <div className={cssClasses}><div className="inner">
                 <div className="opacity-blocker" />
