@@ -9,6 +9,7 @@ class PubSubEvent {
             if (index >= 0) callbacks.splice(index, 1);
         };
         this.notify = (...args) => callbacks.forEach(callback => callback(...args));
+        this.countListeners = () => callbacks.length;
     }
 }
 

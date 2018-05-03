@@ -21,6 +21,7 @@ class SectionedPubSubEvent {
                 }
             }
         };
+        this.countListeners = section => callbacks.has(section) ? callbacks.get(section).length : 0;
     }
 }
 

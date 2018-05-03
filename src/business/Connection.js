@@ -27,6 +27,9 @@ class Connection {
             delete data.type;
             console.log("%cReceiving%c event %c%s%c with data: %O",
                 "color: DarkOrchid; font-weight: bold;", "", Connection.eventColor, type, "", data);
+            if (this.onEvent.countListeners(type) === 0) {
+                console.warn("No listeners for event %c%s%c", Connection.eventColor, type, "");
+            }
             this.onEvent.notify(type, data);
         };
     }
