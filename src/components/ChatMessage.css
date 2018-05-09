@@ -21,3 +21,8 @@
 .system-message {
     color: #ff8c00;
 }
+
+.me-message .Username {
+    font-weight: unset;
+    color: unset !important;
+}

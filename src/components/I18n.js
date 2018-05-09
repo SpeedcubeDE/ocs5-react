@@ -7,21 +7,27 @@ class I18n extends Component {
         this.state = {
             text: context.ocs.i18nService.getText(props.path, props.data)
         };
-        this._onLanguageChanged = this._onLanguageChanged.bind(this);
+        this._refreshText = this._refreshText.bind(this);
     }
 
-    _onLanguageChanged() {
+    _refreshText() {
         this.setState({
             text: this.context.ocs.i18nService.getText(this.props.path, this.props.data)
         });
     }
 
     componentDidMount() {
-        this.context.ocs.i18nService.onLanguageChanged.listen(this._onLanguageChanged)
+        this.context.ocs.i18nService.onLanguageChanged.listen(this._refreshText)
     }
 
     componentWillUnmount() {
-        this.context.ocs.i18nService.onLanguageChanged.unlisten(this._onLanguageChanged)
+        this.context.ocs.i18nService.onLanguageChanged.unlisten(this._refreshText)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.path !== this.props.path) {
+            this._refreshText();
+        }
     }
 
     render() {

@@ -6,24 +6,35 @@ import I18n from "./I18n";
 class Room extends Component {
     constructor(props, context) {
         super(props, context);
-        this.roomID = props.roomID;
-        this.state = {
-            room: context.ocs.roomsService.getRoomForID(this.roomID),
-            isSelected: context.ocs.roomsService.getSelectedRoomID() === this.roomID
-        };
+        this.state = Room.stateFromPropsAndContext(props, context);
         this._onRoomDataChange = this._onRoomDataChange.bind(this);
         this._onRoomSelect = this._onRoomSelect.bind(this);
         this._onClickLeave = this._onClickLeave.bind(this);
         this._onClickSelect = this._onClickSelect.bind(this);
     }
 
+    static stateFromPropsAndContext(props, context) {
+        return {
+            room: context.ocs.roomsService.getRoomForID(props.roomID),
+            isSelected: context.ocs.roomsService.getSelectedRoomID() === props.roomID
+        };
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.roomID !== this.props.roomID) {
+            this.context.ocs.roomsService.onRoomDataChange.unlisten(prevProps.roomID, this._onRoomDataChange);
+            this.context.ocs.roomsService.onRoomDataChange.listen(this.props.roomID, this._onRoomDataChange);
+            this.setState(Room.stateFromPropsAndContext(this.props, this.context));
+        }
+    }
+
     componentDidMount() {
-        this.context.ocs.roomsService.onRoomDataChange.listen(this.roomID, this._onRoomDataChange);
+        this.context.ocs.roomsService.onRoomDataChange.listen(this.props.roomID, this._onRoomDataChange);
         this.context.ocs.roomsService.onRoomSelect.listen(this._onRoomSelect);
     }
 
     componentWillUnmount() {
-        this.context.ocs.roomsService.onRoomDataChange.unlisten(this.roomID, this._onRoomDataChange);
+        this.context.ocs.roomsService.onRoomDataChange.unlisten(this.props.roomID, this._onRoomDataChange);
         this.context.ocs.roomsService.onRoomSelect.unlisten(this._onRoomSelect);
     }
 
@@ -32,11 +43,11 @@ class Room extends Component {
     }
 
     _onRoomSelect(roomID) {
-        this.setState({isSelected: this.roomID === roomID});
+        this.setState({isSelected: this.props.roomID === roomID});
     }
 
     _onClickLeave() {
-        this.context.ocs.roomsService.leaveRoom(this.roomID);
+        this.context.ocs.roomsService.leaveRoom(this.props.roomID);
     }
 
     _onClickSelect() {
@@ -48,13 +59,13 @@ class Room extends Component {
                     // cancelled
                     return;
                 }
-                this.context.ocs.roomsService.joinRoom(this.roomID, password);
+                this.context.ocs.roomsService.joinRoom(this.props.roomID, password);
                 return; // don't select it yet: joining might fail
             } else {
-                this.context.ocs.roomsService.joinRoom(this.roomID, "");
+                this.context.ocs.roomsService.joinRoom(this.props.roomID, "");
             }
         }
-        this.context.ocs.roomsService.selectRoom(this.roomID);
+        this.context.ocs.roomsService.selectRoom(this.props.roomID);
     }
 
     render() {
@@ -80,6 +91,10 @@ class Room extends Component {
 
 Room.contextTypes = {
     ocs: PropTypes.object
+};
+
+Room.propTypes = {
+    roomID: PropTypes.number
 };
 
 export default Room;

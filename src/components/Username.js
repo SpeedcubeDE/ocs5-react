@@ -5,30 +5,40 @@ import PropTypes from "prop-types";
 class Username extends Component {
     constructor(props, context) {
         super(props, context);
-        this.userID = props.userID;
-        let userdata = context.ocs.usersService.getUserOrDummy(this.userID);
+        const userdata = context.ocs.usersService.getUserOrDummy(props.userID);
         this.state = {
             userdata: userdata
         };
-        this.handleUserdataUpdate = this.handleUserdataUpdate.bind(this);
+        this._onUserdataUpdate = this._onUserdataUpdate.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.userID !== this.props.userID) {
+            this.context.ocs.usersService.onUserdataChanged.unlisten(prevProps.userID, this._onUserdataUpdate);
+            this.context.ocs.usersService.onUserdataChanged.listen(this.props.userID, this._onUserdataUpdate);
+            const userdata = this.context.ocs.usersService.getUserOrDummy(this.props.userID);
+            this.setState({
+                userdata: userdata
+            });
+        }
     }
 
     componentDidMount() {
-        this.context.ocs.usersService.onUserdataChanged.listen(this.userID, this.handleUserdataUpdate);
+        this.context.ocs.usersService.onUserdataChanged.listen(this.props.userID, this._onUserdataUpdate);
     }
 
     componentWillUnmount() {
-        this.context.ocs.usersService.onUserdataChanged.unlisten(this.userID, this.handleUserdataUpdate);
+        this.context.ocs.usersService.onUserdataChanged.unlisten(this.props.userID, this._onUserdataUpdate);
     }
 
-    handleUserdataUpdate(userdata) {
+    _onUserdataUpdate(userdata) {
         this.setState({userdata: userdata});
     }
 
     render() {
         const user = this.state.userdata;
-        const selfmark = this.context.ocs.usersService.getCurrentUser().id === this.userID ? "» " : "";
-        let cssClasses = "Username user-" + this.userID;
+        const selfmark = this.context.ocs.usersService.getCurrentUser().id === this.props.userID ? "» " : "";
+        let cssClasses = "Username user-" + this.props.userID;
         if (!user.connected) cssClasses += " offline";
         return (
             <span className={cssClasses}>
@@ -40,6 +50,10 @@ class Username extends Component {
 
 Username.contextTypes = {
     ocs: PropTypes.object
+};
+
+Username.propTypes = {
+    userID: PropTypes.number
 };
 
 export default Username;
