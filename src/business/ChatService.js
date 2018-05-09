@@ -1,6 +1,6 @@
 import SectionedPubSubEvent from "./SectionedPubSubEvent";
 
-class ChatService {
+export default class ChatService {
     constructor(connection, roomsService) {
         this._connection = connection;
         this._roomsService = roomsService;
@@ -47,5 +47,3 @@ class ChatService {
         });
     }
 }
-
-export default ChatService;

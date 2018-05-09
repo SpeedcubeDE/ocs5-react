@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import I18n from "./I18n";
 import "./ChatInput.css"
 
-class ChatInput extends Component {
+export default class ChatInput extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+
     constructor() {
         super();
         this.state = {
@@ -43,16 +45,10 @@ class ChatInput extends Component {
                         onKeyDown={this.handleTextareaEnter}
                     /></I18n>
                     <I18n path="chat.submit" setprop="value">
-                        <input type="submit" className="rounded-right" />
+                        <input type="submit" className="rounded-right"/>
                     </I18n>
                 </form>
             </div>
         );
     }
 }
-
-ChatInput.contextTypes = {
-    ocs: PropTypes.object
-};
-
-export default ChatInput;

@@ -2,7 +2,7 @@ import PubSubEvent from "./PubSubEvent";
 import lang_en from '../languages/en';
 import lang_de from '../languages/de';
 
-class I18nService {
+export default class I18nService {
     constructor() {
         this._texts = new Map();
         this._languages = new Map([
@@ -54,5 +54,3 @@ class I18nService {
         return map;
     }
 }
-
-export default I18nService;

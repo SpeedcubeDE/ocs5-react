@@ -10,7 +10,9 @@ import Users from "./components/Users";
 import Rooms from "./components/Rooms";
 import Parties from "./components/Parties";
 
-class App extends Component {
+export default class App extends Component {
+    static childContextTypes = {ocs: PropTypes.object};
+
     constructor() {
         super();
         // TODO display what server you're connected to somewhere
@@ -60,9 +62,3 @@ class App extends Component {
         );
     }
 }
-
-App.childContextTypes = {
-    ocs: PropTypes.object
-};
-
-export default App;

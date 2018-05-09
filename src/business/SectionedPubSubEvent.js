@@ -1,5 +1,5 @@
 
-class SectionedPubSubEvent {
+export default class SectionedPubSubEvent {
     constructor() {
         const callbacks = new Map();
 
@@ -24,5 +24,3 @@ class SectionedPubSubEvent {
         this.countListeners = section => callbacks.has(section) ? callbacks.get(section).length : 0;
     }
 }
-
-export default SectionedPubSubEvent;

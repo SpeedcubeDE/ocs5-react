@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import "./Parties.css"
+import Party from "./Party";
 
-class Parties extends Component {
-    constructor() {
-        super();
+export default class Parties extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+
+    constructor(props, context) {
+        super(props, context);
         this.state = {
         };
     }
@@ -23,9 +26,3 @@ class Parties extends Component {
         );
     }
 }
-
-Parties.contextTypes = {
-    ocs: PropTypes.object
-};
-
-export default Parties;

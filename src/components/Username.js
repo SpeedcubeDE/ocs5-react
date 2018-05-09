@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import "./Username.css"
 import PropTypes from "prop-types";
 
-class Username extends Component {
+export default class Username extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+    static propTypes = {userID: PropTypes.number};
+
     constructor(props, context) {
         super(props, context);
         const userdata = context.ocs.usersService.getUserOrDummy(props.userID);
@@ -47,13 +50,3 @@ class Username extends Component {
         );
     }
 }
-
-Username.contextTypes = {
-    ocs: PropTypes.object
-};
-
-Username.propTypes = {
-    userID: PropTypes.number
-};
-
-export default Username;

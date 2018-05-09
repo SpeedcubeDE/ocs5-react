@@ -1,6 +1,6 @@
 import SectionedPubSubEvent from "./SectionedPubSubEvent";
 
-class Connection {
+export default class Connection {
     static eventColor = "color: green; font-weight: bold;";
 
     constructor(url) {
@@ -41,5 +41,3 @@ class Connection {
         this._websocket.send(JSON.stringify(data));
     }
 }
-
-export default Connection;

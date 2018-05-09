@@ -2,7 +2,7 @@ import PubSubEvent from "./PubSubEvent";
 import SectionedPubSubEvent from "./SectionedPubSubEvent";
 import Room from "../models/Room";
 
-class RoomsService {
+export default class RoomsService {
     static NO_ROOM = -1;
 
     constructor(connection) {
@@ -84,5 +84,3 @@ class RoomsService {
         });
     }
 }
-
-export default RoomsService;

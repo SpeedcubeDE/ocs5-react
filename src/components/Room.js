@@ -3,7 +3,10 @@ import "./Room.css"
 import PropTypes from "prop-types";
 import I18n from "./I18n";
 
-class Room extends Component {
+export default class Room extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+    static propTypes = {roomID: PropTypes.number};
+
     constructor(props, context) {
         super(props, context);
         this.state = Room.stateFromPropsAndContext(props, context);
@@ -79,22 +82,14 @@ class Room extends Component {
             ? <div className="userNum"><I18n path="whisper_channel"/></div>
             : <div className="userNum">{userNum} {userNum === 1 ? "user" : "users"}</div>;
         return (
-            <div className={cssClasses}><div className="inner">
-                <div className="opacity-blocker" />
-                <div className="name" onClick={this._onClickSelect}>{this.state.room.name}</div>
-                {subrow}
-                <div className="button leaveButton" onClick={this._onClickLeave}>✖</div>
-            </div></div>
+            <div className={cssClasses}>
+                <div className="inner">
+                    <div className="opacity-blocker"/>
+                    <div className="name" onClick={this._onClickSelect}>{this.state.room.name}</div>
+                    {subrow}
+                    <div className="button leaveButton" onClick={this._onClickLeave}>✖</div>
+                </div>
+            </div>
         );
     }
 }
-
-Room.contextTypes = {
-    ocs: PropTypes.object
-};
-
-Room.propTypes = {
-    roomID: PropTypes.number
-};
-
-export default Room;

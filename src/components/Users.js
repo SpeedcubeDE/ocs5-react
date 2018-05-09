@@ -4,7 +4,9 @@ import "./Users.css"
 import RoomsService from "../business/RoomsService";
 import Username from "./Username";
 
-class Users extends Component {
+export default class Users extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+
     constructor() {
         super();
         this.state = {
@@ -51,14 +53,10 @@ class Users extends Component {
             });
         return (
             <div className="Users">
-                <table><tbody>{users}</tbody></table>
+                <table>
+                    <tbody>{users}</tbody>
+                </table>
             </div>
         );
     }
 }
-
-Users.contextTypes = {
-    ocs: PropTypes.object
-};
-
-export default Users;

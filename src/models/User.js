@@ -1,5 +1,5 @@
 
-class User {
+export default class User {
     constructor() {
         this.id = 0;
         this.username = "";
@@ -9,5 +9,3 @@ class User {
         this.connected = false;
     }
 }
-
-export default User;

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import "./Rooms.css"
 import Room from "./Room";
 
-class Rooms extends Component {
+export default class Rooms extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -28,18 +30,14 @@ class Rooms extends Component {
 
     render() {
         const rooms = this.state.rooms
-            .sort((r1, r2) => +(r1.type==="whisper") - +(r2.type==="whisper")) // whispers at the bottom
+            .sort((r1, r2) => +(r1.type === "whisper") - +(r2.type === "whisper")) // whispers at the bottom
             .map(room => <Room roomID={room.id} key={room.id}/>);
         return (
-            <div className="Rooms"><div className="inner">
-                {rooms}
-            </div></div>
+            <div className="Rooms">
+                <div className="inner">
+                    {rooms}
+                </div>
+            </div>
         );
     }
 }
-
-Rooms.contextTypes = {
-    ocs: PropTypes.object
-};
-
-export default Rooms;

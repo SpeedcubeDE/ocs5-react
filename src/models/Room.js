@@ -1,5 +1,5 @@
 
-class Room {
+export default class Room {
     constructor() {
         this.id = 0;
         this.name = "";
@@ -10,5 +10,3 @@ class Room {
         this.hasPW = false;
     }
 }
-
-export default Room;

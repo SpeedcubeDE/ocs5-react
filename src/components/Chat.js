@@ -6,7 +6,9 @@ import uuid from 'uuid';
 import I18n from './I18n';
 import RoomsService from "../business/RoomsService";
 
-class Chat extends Component {
+export default class Chat extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+    
     static MAX_MESSAGES = 200;
     static UPDATE_DELAY_MS = 30;
 
@@ -77,13 +79,13 @@ class Chat extends Component {
         this.lastScrollOffset = scroll_offset;
 
         const max_scroll_offset = this.scrollareaElement.scrollHeight - this.scrollareaElement.offsetHeight;
-         if (scroll_delta < 0 && event.type !== "resize") {
-             // user scrolled up, un-anchor!
-             this.unanchor();
-         } else if (scroll_offset >= max_scroll_offset) {
-              // scrolled all the way to the bottom, re-anchor
-             this.reanchor();
-         }
+        if (scroll_delta < 0 && event.type !== "resize") {
+            // user scrolled up, un-anchor!
+            this.unanchor();
+        } else if (scroll_offset >= max_scroll_offset) {
+            // scrolled all the way to the bottom, re-anchor
+            this.reanchor();
+        }
     }
 
     /**
@@ -124,12 +126,12 @@ class Chat extends Component {
 
     render() {
         const chatmessages = this.state.chatmessages
-            .slice(this.state.chatmessages.length-Chat.MAX_MESSAGES, this.state.chatmessages.length)
+            .slice(this.state.chatmessages.length - Chat.MAX_MESSAGES, this.state.chatmessages.length)
             .map(message => <ChatMessage message={message} key={uuid.v4()}/>);
         const scrollToBottomBar = this.state.anchored
             ? null
             : <button className="scrollToBottomBar" onClick={this.reanchor}>
-                <I18n path="chat.autoscroll_bar_text" /></button>;
+                <I18n path="chat.autoscroll_bar_text"/></button>;
         const scrollArea = (
             <div className="scrollArea" onScroll={this.onScroll} ref={instance => this.scrollareaElement = instance}>
                 {chatmessages}
@@ -144,9 +146,3 @@ class Chat extends Component {
         );
     }
 }
-
-Chat.contextTypes = {
-    ocs: PropTypes.object
-};
-
-export default Chat;

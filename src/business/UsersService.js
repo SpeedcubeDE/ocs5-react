@@ -1,7 +1,7 @@
 import SectionedPubSubEvent from "./SectionedPubSubEvent";
 import User from "../models/User";
 
-class UsersService {
+export default class UsersService {
     static SYSTEM_USER_ID = -1;
 
     constructor(connection) {
@@ -104,5 +104,3 @@ class UsersService {
         this.onUserdataChanged.notify(user.id, user);
     }
 }
-
-export default UsersService;

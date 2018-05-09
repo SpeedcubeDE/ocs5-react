@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-class I18n extends Component {
+export default class I18n extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+    static propTypes = {
+        path: PropTypes.string,
+        data: PropTypes.object,
+        setprop: PropTypes.string,
+    };
+
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -43,15 +50,3 @@ class I18n extends Component {
         }
     }
 }
-
-I18n.contextTypes = {
-    ocs: PropTypes.object
-};
-
-I18n.propTypes = {
-    path: PropTypes.string,
-    data: PropTypes.object,
-    setprop: PropTypes.string,
-};
-
-export default I18n;

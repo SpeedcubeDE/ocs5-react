@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 import UsersService from "../business/UsersService";
 import Username from "./Username";
 
-class ChatMessage extends Component {
+export default class ChatMessage extends Component {
+    static contextTypes = {ocs: PropTypes.object};
+    static propTypes = {message: PropTypes.object};
+
     render() {
         const date = new Date(this.props.message.time * 1000);
         this.time_str = date
@@ -35,13 +38,3 @@ class ChatMessage extends Component {
         );
     }
 }
-
-ChatMessage.contextTypes = {
-    ocs: PropTypes.object
-};
-
-ChatMessage.propTypes = {
-    message: PropTypes.object
-};
-
-export default ChatMessage;

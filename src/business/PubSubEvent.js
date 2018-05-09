@@ -1,5 +1,5 @@
 
-class PubSubEvent {
+export default class PubSubEvent {
     constructor() {
         const callbacks = [];
 
@@ -12,5 +12,3 @@ class PubSubEvent {
         this.countListeners = () => callbacks.length;
     }
 }
-
-export default PubSubEvent;
