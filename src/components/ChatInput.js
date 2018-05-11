@@ -2,6 +2,13 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import I18n from "./I18n";
 import "./ChatInput.css"
+import {
+    addFullscreenChangeListener,
+    exitFullscreen,
+    isFullscreen,
+    removeFullscreenChangeListener,
+    requestFullscreen
+} from "../business/FullscreenPolyfill";
 
 export default class ChatInput extends Component {
     static contextTypes = {ocs: PropTypes.object};
@@ -14,6 +21,19 @@ export default class ChatInput extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTextareaEnter = this.handleTextareaEnter.bind(this);
+        this.onFullscreenChange = this.onFullscreenChange.bind(this);
+    }
+
+    componentDidMount() {
+        addFullscreenChangeListener(this.onFullscreenChange);
+    }
+
+    componentWillUnmount() {
+        removeFullscreenChangeListener(this.onFullscreenChange);
+    }
+
+    onFullscreenChange() {
+        this.forceUpdate();
     }
 
     handleChange(e) {
@@ -34,7 +54,18 @@ export default class ChatInput extends Component {
         return true;
     }
 
+    static onFullscreenClick() {
+        if (isFullscreen()) {
+            exitFullscreen();
+        } else {
+            requestFullscreen();
+        }
+    }
+
     render() {
+        const fullscreenButton = isFullscreen()
+            ? <i className="fas fa-compress" style={{fontSize: "1.5em"}}/>
+            : <i className="fas fa-expand" style={{fontSize: "1.5em"}}/>;
         return (
             <div className="ChatInput">
                 <form onSubmit={this.handleSubmit}>
@@ -45,8 +76,9 @@ export default class ChatInput extends Component {
                         onKeyDown={this.handleTextareaEnter}
                     /></I18n>
                     <I18n path="chat.submit" setprop="value">
-                        <input type="submit" className="rounded-right"/>
+                        <input type="submit"/>
                     </I18n>
+                    <button className="rounded-right" onClick={ChatInput.onFullscreenClick}>{fullscreenButton}</button>
                 </form>
             </div>
         );
