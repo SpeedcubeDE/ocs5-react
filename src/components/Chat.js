@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import "./Chat.css"
 import ChatMessage from "./ChatMessage";
-import uuid from 'uuid';
 import I18n from './I18n';
 import RoomsService from "../business/RoomsService";
 
@@ -125,9 +124,10 @@ export default class Chat extends Component {
     }
 
     render() {
+        let i = 0;
         const chatmessages = this.state.chatmessages
             .slice(this.state.chatmessages.length - Chat.MAX_MESSAGES, this.state.chatmessages.length)
-            .map(message => <ChatMessage message={message} key={uuid.v4()}/>);
+            .map(message => <ChatMessage message={message} key={i++}/>);
         const scrollToBottomBar = this.state.anchored
             ? null
             : <button className="scrollToBottomBar" onClick={this.reanchor}>
