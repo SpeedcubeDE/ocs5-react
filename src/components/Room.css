@@ -64,6 +64,10 @@
     font-size: 2em;
 }
 
+.Room .button>.fas {
+    vertical-align: middle;
+}
+
 .Room.joined:hover .leaveButton {
     float:right;
     display: inline-block;

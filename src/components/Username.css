@@ -7,3 +7,11 @@
     text-decoration: line-through;
     opacity: 0.4;
 }
+
+.Username.user-self::before {
+    content: "\f101"; /* fa-angle-double-right */
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 900;
+    font-size: 0.7em;
+    padding-right: 0.3em;
+}

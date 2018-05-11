@@ -40,12 +40,13 @@ export default class Username extends Component {
 
     render() {
         const user = this.state.userdata;
-        const selfmark = this.context.ocs.usersService.isCurrentUser(this.props.userID) ? "» " : "";
         let cssClasses = "Username user-" + this.props.userID;
         if (!user.connected) cssClasses += " offline";
+        const isSelf = this.context.ocs.usersService.isCurrentUser(this.props.userID);
+        if (isSelf) cssClasses += " user-self";
         return (
             <span className={cssClasses}>
-                {selfmark}{user.username}
+                {user.username}
             </span>
         );
     }

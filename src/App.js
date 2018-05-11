@@ -9,6 +9,8 @@ import Cookie from 'js-cookie'
 import Users from "./components/Users";
 import Rooms from "./components/Rooms";
 import Parties from "./components/Parties";
+import '@fortawesome/fontawesome-free-webfonts'
+import '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css';
 
 export default class App extends Component {
     static childContextTypes = {ocs: PropTypes.object};

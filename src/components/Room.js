@@ -87,7 +87,9 @@ export default class Room extends Component {
                     <div className="opacity-blocker"/>
                     <div className="name" onClick={this._onClickSelect}>{this.state.room.name}</div>
                     {subrow}
-                    <div className="button leaveButton" onClick={this._onClickLeave}>✖</div>
+                    <div className="button leaveButton" onClick={this._onClickLeave}>
+                        <span className="fas fa-times"/>
+                    </div>
                 </div>
             </div>
         );
