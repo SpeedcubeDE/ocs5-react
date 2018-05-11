@@ -3,7 +3,7 @@
     background: var(--color-prim);
 }
 
-.Chat .scrollArea {
+.Chat .scroll-area {
     height: 100%;
     padding: 12px;
     overflow-y: scroll;
@@ -14,7 +14,7 @@
     overflow-x: hidden;
 }
 
-.Chat button.scrollToBottomBar {
+.Chat button.scroll-to-bottom-bar {
     background: rgba(0, 0, 0, 0.5);
     cursor: pointer;
     color: var(--color-text);

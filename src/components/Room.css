@@ -68,7 +68,7 @@
     vertical-align: middle;
 }
 
-.Room.joined:hover .leaveButton {
+.Room.joined:hover .button-leave {
     float:right;
     display: inline-block;
 }
@@ -89,7 +89,7 @@
     cursor: pointer;
 }
 
-.Room .userNum {
+.Room .user-num {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

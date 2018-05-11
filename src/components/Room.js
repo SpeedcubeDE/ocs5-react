@@ -79,15 +79,15 @@ export default class Room extends Component {
         if (isWhisper) cssClasses += " whisper";
         const userNum = this.state.room.userNum;
         const subrow = isWhisper
-            ? <div className="userNum"><I18n path="whisper_channel"/></div>
-            : <div className="userNum">{userNum} {userNum === 1 ? "user" : "users"}</div>;
+            ? <div className="user-num"><I18n path="whisper_channel"/></div>
+            : <div className="user-num">{userNum} {userNum === 1 ? "user" : "users"}</div>;
         return (
             <div className={cssClasses}>
                 <div className="inner">
                     <div className="opacity-blocker"/>
                     <div className="name" onClick={this._onClickSelect}>{this.state.room.name}</div>
                     {subrow}
-                    <div className="button leaveButton" onClick={this._onClickLeave}>
+                    <div className="button button-leave" onClick={this._onClickLeave}>
                         <span className="fas fa-times"/>
                     </div>
                 </div>

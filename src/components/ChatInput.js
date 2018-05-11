@@ -70,7 +70,7 @@ export default class ChatInput extends Component {
             <div className="ChatInput">
                 <form onSubmit={this.handleSubmit}>
                     <I18n path="chat.input_placeholder" setprop="placeholder"><textarea
-                        className="textInput"
+                        className="text-input"
                         value={this.state.inputText}
                         onChange={this.handleChange}
                         onKeyDown={this.handleTextareaEnter}

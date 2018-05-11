@@ -12,7 +12,7 @@
     width: inherit;
 }
 
-.ChatInput .textInput {
+.ChatInput .text-input {
     box-shadow: 0 0 4px 3px #070707 inset;
     height: 3.1em;
     resize: none;

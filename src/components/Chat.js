@@ -130,12 +130,12 @@ export default class Chat extends Component {
             .map(message => <ChatMessage message={message} key={i++}/>);
         const scrollToBottomBar = this.state.anchored
             ? null
-            : <button className="scrollToBottomBar" onClick={this.reanchor}>
+            : <button className="scroll-to-bottom-bar" onClick={this.reanchor}>
                 <I18n path="chat.autoscroll_bar_text"/></button>;
         const scrollArea = (
-            <div className="scrollArea" onScroll={this.onScroll} ref={instance => this.scrollareaElement = instance}>
+            <div className="scroll-area" onScroll={this.onScroll} ref={instance => this.scrollareaElement = instance}>
                 {chatmessages}
-                <div ref={elem => this.scrollAnchor = elem}>&nbsp;</div>
+                <div ref={elem => this.scrollAnchor = elem} style={{height: "12px"}}/>
             </div>
         );
         return (
