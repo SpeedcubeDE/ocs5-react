@@ -32,3 +32,9 @@
 .Rooms {
     grid-area: rooms;
 }
+
+.menu-button {
+    grid-area: roomsettings;
+    font-size: 2em;
+    padding: 0;
+}

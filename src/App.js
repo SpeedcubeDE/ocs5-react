@@ -60,6 +60,9 @@ export default class App extends Component {
                 <Users/>
                 <Parties/>
                 <Rooms/>
+                <button className="menu-button">
+                    <i className="fas fa-bars"/>
+                </button>
             </div>
         );
     }
