@@ -18,6 +18,7 @@ export default class UsersService {
         });
         this._currentUserName = ""; // TODO identify by id
         connection.onEvent.listen("login", data => {
+            console.log("Processing login: %O", data);
             if (data.login) {
                 this._currentUserName = data.name;
             }
@@ -42,11 +43,24 @@ export default class UsersService {
     }
 
     getCurrentUser() {
+        // TODO simplify once the login feedback returns the user ID
         for (const user of this._users.values()) {
             if (user.username === this._currentUserName) {
                 return user;
             }
         }
+        console.error("Could not find current user '%s' in userlist %O", this._currentUserName, this._users);
+        return new User();
+    }
+
+    isCurrentUser(userID) {
+        // TODO simplify once the login feedback returns the user ID
+        for (const user of this._users.values()) {
+            if (user.id === userID && user.username === this._currentUserName) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getUser(userID) {
