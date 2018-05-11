@@ -1,0 +1,108 @@
+
+.Party {
+    display: grid;
+    grid-template-areas: "name actions" "info users";
+    grid-template-columns: 8em auto;
+    grid-template-rows: min-content minmax(0, min-content) auto;
+    overflow: hidden;
+    background-color: var(--color-prim);
+}
+
+.Party:nth-child(even) {
+    background-color: var(--color-sec);
+}
+
+.Party > .name {
+    grid-area: name;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1.2em;
+}
+
+.Party > .name::before {
+    content: "\f059"; /* fa-question-circle */
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 900;
+    display: inline-block;
+    padding-right: 0.3em;
+    width: 1.1em;
+    text-align: right;
+}
+
+.Party > .name.open::before {
+    content: "\f52b"; /* fa-door-open */
+    color: var(--color-green);
+}
+
+.Party > .name.closed::before {
+    content: "\f52a"; /* fa-door-closed */
+    color: var(--color-grey);
+}
+
+.Party > .name.started::before {
+    content: "\f2f2"; /* fa-stopwatch */
+    color: var(--color-blue);
+}
+
+.Party > .actions {
+    grid-area: actions;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.Party > .actions button {
+    text-align: left;
+    flex-grow: 1;
+    min-height: 1.2em;
+    /*padding: 0 0.2em;*/
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    /*padding: 0 0.4em 0.2em 0.4em;*/
+    max-height: 3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Party > .actions button::before {
+    content: "\f059"; /* fa-question-circle */
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 900;
+    transform-origin: center;
+    transform: scale(1.2);
+    display: inline-block;
+    margin-right: 0.4em;
+}
+
+.Party > .actions button.join::before {
+    content: "\f067"; /* fa-plus */
+    color: var(--color-green);
+}
+
+.Party > .actions button.leave::before {
+    content: "\f068"; /* fa-minus */
+    color: var(--color-red);
+}
+
+.Party > .actions button.start::before {
+    content: "\f00c"; /* fa-check */
+    color: var(--color-green);
+}
+
+.Party > .actions button.close::before {
+    content: "\f00d"; /* fa-times */
+    color: var(--color-red);
+}
+
+.Party > .info {
+    padding: 0.2em;
+    grid-area: info;
+    white-space: nowrap;
+}
+
+.Party > .users {
+    grid-area: users;
+}

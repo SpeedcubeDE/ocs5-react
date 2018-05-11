@@ -15,6 +15,11 @@
 
     --color-text: #ffffff;
     --color-text-dim: #ffffff60;
+
+    --color-green: #008000;
+    --color-red: #ab0000;
+    --color-grey: #505050;
+    --color-blue: #3088d5;
 }
 
 body {

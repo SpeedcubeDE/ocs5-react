@@ -1,0 +1,17 @@
+
+.Parties button.new-party {
+    vertical-align: middle;
+    width: 100%;
+    font-size: 1em;
+}
+
+.Parties button.new-party::before {
+    content: "\f067";
+    font-family: "Font Awesome 5 Free", sans-serif;
+    font-weight: 900;
+    display: inline-block;
+    padding-right: 0.3em;
+    width: 1.1em;
+    text-align: right;
+    color: var(--color-green);
+}
