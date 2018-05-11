@@ -10,6 +10,7 @@ export default class OCS {
         this.roomsService = new RoomsService(connection);
         this.chatService = new ChatService(connection, this.roomsService);
         this.usersService = new UsersService(connection);
+        this.partiesService = new PartiesService(connection);
         this.i18nService = new I18nService();
     }
 }
